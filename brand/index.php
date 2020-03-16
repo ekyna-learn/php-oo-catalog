@@ -58,12 +58,16 @@ while(false !== $data = $statement->fetch(\PDO::FETCH_ASSOC)) {
                 <?php foreach ($brands as $brand) { ?>
                 <tr>
                     <th scope="row"><?php echo $brand->getId() ?></th>
-                    <td><?php echo $brand->getTitle() ?></td>
                     <td>
-                        <a href="#" class="btn btn-sm btn-warning">
+                        <a href="/brand/read.php?id=<?php echo $brand->getId() ?>">
+                            <?php echo $brand->getTitle() ?>
+                        </a>
+                    </td>
+                    <td>
+                        <a href="/brand/update.php?id=<?php echo $brand->getId() ?>" class="btn btn-sm btn-warning">
                             Modifier
                         </a>
-                        <a href="#" class="btn btn-sm btn-danger">
+                        <a href="/brand/delete.php?id=<?php echo $brand->getId() ?>" class="btn btn-sm btn-danger">
                             Supprimer
                         </a>
                     </td>

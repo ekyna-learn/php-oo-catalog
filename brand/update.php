@@ -3,13 +3,49 @@
 
 require '../bootstrap.php';
 
-// Avec les espaces de noms (namespaces) on doit importer les classes
-// que l'on souhaite utiliser avec le mot clé "use".
 use Entity\Brand;
 
-// On créé une nouvelle instance de la classe Brand en vue
-// de lui assigner les valeurs saisies dans le formulaire
+// Avant de gérer le formulaire, il nous faut récupérer
+// l'instance de la class Brand à modifier. Une partie
+// de ce code est donc identique au fichier read.php
+
+// Ce fichier reçoit un paramètre 'id' via l'URL ( brand/update.php?id= ??? )
+// On peut donc récupérer cet identifiant via la variable $_GET (GET = paramètres URL)
+$id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+
+// On prépare une requête pour récupérer les données de la marque ayant l'identifiant
+$select = $connection->prepare(
+    'SELECT id, title, description FROM brand WHERE id=:id LIMIT 1'
+);
+
+// On assigne la valeur de l'identifiant au paramètre 'id' de la requête
+$select->bindValue('id', $id);
+
+// On exécute la requête select
+$select->execute();
+
+// Puis on récupère la (première) ligne de résultat
+$data = $select->fetch(\PDO::FETCH_ASSOC);
+
+// Si data vaut FALSE, c'est que l'identifiant ne correspond à aucun enregistrement
+// dans la base de données
+if (false === $data) {
+    // Redirige l'utlisateur vers la page "Liste des marques"
+    // On redirige l'internaute vers la page détail...
+    http_response_code(302); // Code http de redirection temporaire
+    header('Location: /brand/index.php'); // Attention à bien écrire "Location: "
+    exit;
+}
+
+// (Sinon) On créé une instance de la classe Brand et on assigne les données
+// provenant du résultat de la requête select.
 $brand = new Brand();
+$brand->setId($data['id']);
+$brand->setTitle($data['title']);
+$brand->setDescription($data['description']);
+
+// On utilisera les accesseurs (méthodes get*) plus bas pour mettre les
+// valeurs acuelles dans les champs du formulaire.
 
 /*
 La variable globale $_POST contient les données soumises par un formulaire
@@ -27,7 +63,7 @@ Ainsi, si je saisi 'Apple' dans le champ titre, et 'Marque de smartphones'
 dans le champ description, la variable $_POST sera dans l'état suivant :
 
 $_POST = [
-    'brand'       => 'create', // Champ invisible (<input type="hidden" ...>)
+    'brand'       => 'update', // Champ invisible (<input type="hidden" ...>)
     'title'       => 'Apple',
     'description' => 'Marque de smartphones',
 ];
@@ -35,36 +71,32 @@ $_POST = [
 
 // Pour savoir si le formulaire a été soumis, on vérifie la présence
 // du champ invisible et sa valeur dans le tableau $_POST
-if (isset($_POST['brand']) && ($_POST['brand'] === 'create')) {
+if (isset($_POST['brand']) && ($_POST['brand'] === 'update')) {
     // On utilise le mutateur (méthode get*) pour assigner la
     // valeur du champ 'title' à la propriété 'title' de notre
     // instance de la classe Brand.
     $brand->setTitle($_POST['title']);
     $brand->setDescription($_POST['description']);
 
-    // On "prépare" une requête d'insertion. ":brand" et ":description" sont
+    // On "prépare" une requête de modification. ":brand" et ":description" sont
     // des paramètres auxquels on va assigner des valeurs
-    $insert = $connection->prepare(
-        'INSERT INTO brand(title, description) VALUES (:title, :description)'
+    $update = $connection->prepare(
+        'UPDATE brand SET title=:title, description=:description WHERE id=:id LIMIT 1'
     );
 
     // On assigne des valeurs aux paramètres.
+    // Ici, 'id' fait référence au paramètre ':id'
+    $update->bindValue('id', $brand->getId());
     // Ici, 'title' fait référence au paramètre ':title'
-    $insert->bindValue('title', $brand->getTitle());
-    $insert->bindValue('description', $brand->getDescription());
+    $update->bindValue('title', $brand->getTitle());
+    $update->bindValue('description', $brand->getDescription());
 
-    // On exécute la requête d'insertion
-    $insert->execute();
-
-    // On récupère l'identifiant généré par la base de données...
-    $id = $connection->lastInsertId();
-
-    // Que l'on attribut à notre instance de la class Brand
-    $brand->setId($id);
+    // On exécute la requête de modification
+    $update->execute();
 
     // On redirige l'internaute vers la page détail...
     http_response_code(302); // Code http de redirection temporaire
-    header('Location: /brand/read.php?id=' . $brand->getId()); // Attention à bien écrire "Location: "
+    header('Location: read.php?id=' . $brand->getId()); // Attention à bien écrire "Location: "
     exit; // Il faut terminer le script pour que la redirection fonctionne.
 }
 
@@ -88,14 +120,23 @@ if (isset($_POST['brand']) && ($_POST['brand'] === 'create')) {
 
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                <h1 class="h2">Créer une nouvelle marque</h1>
+                <h1 class="h2">Modifier la marque</h1>
+                <div class="btn-toolbar mb-2 mb-md-0">
+                    <a href="/brand/read.php?id=<?php echo $brand->getId(); ?>" class="btn btn-default">
+                        Retour au détail
+                    </a>
+                    &nbsp;
+                    <a href="/brand/delete.php?id=<?php echo $brand->getId(); ?>" class="btn btn-danger">
+                        Supprimer
+                    </a>
+                </div>
             </div>
 
-            <!-- Formulaire d'ajout -->
-            <form action="/brand/create.php" method="post">
+            <!-- Formulaire de modification (ATTENTION à l'attribut action) -->
+            <form action="/brand/update.php?id=<?php echo $brand->getId(); ?>" method="post">
 
                 <!-- Ce champ invisible permet de déterminer si le formulaire a été soumis -->
-                <input type="hidden" name="brand" value="create">
+                <input type="hidden" name="brand" value="update">
 
                 <!-- Champ titre -->
                 <div class="form-group row">
