@@ -1,5 +1,24 @@
 <!-- Require bootstrap -->
-<?php require '../bootstrap.php'; ?>
+<?php
+
+require '../bootstrap.php';
+
+use Entity\Brand;
+
+$statement = $connection->query('SELECT id, title, description FROM brand');
+
+$brands = [];
+
+while(false !== $data = $statement->fetch(\PDO::FETCH_ASSOC)) {
+    $brand = new Brand();
+    $brand->setId($data['id']);
+    $brand->setTitle($data['title']);
+    $brand->setDescription($data['description']);
+
+    $brands[] = $brand;
+}
+
+?>
 <!doctype html>
 <html lang="fr">
 <head>
@@ -36,9 +55,10 @@
                 </tr>
                 </thead>
                 <tbody>
+                <?php foreach ($brands as $brand) { ?>
                 <tr>
-                    <th scope="row">1</th>
-                    <td>Example</td>
+                    <th scope="row"><?php echo $brand->getId() ?></th>
+                    <td><?php echo $brand->getTitle() ?></td>
                     <td>
                         <a href="#" class="btn btn-sm btn-warning">
                             Modifier
@@ -48,6 +68,7 @@
                         </a>
                     </td>
                 </tr>
+                <?php } ?>
                 </tbody>
             </table>
 

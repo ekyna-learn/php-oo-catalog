@@ -5,13 +5,13 @@ CREATE TABLE `brand` (
   `id` int UNSIGNED NOT NULL,
   `title` varchar(255) NOT NULL,
   `description` text
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `category` (
   `id` int UNSIGNED NOT NULL,
   `title` varchar(255) NOT NULL,
   `description` text
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `product` (
   `id` int UNSIGNED NOT NULL,
@@ -21,12 +21,12 @@ CREATE TABLE `product` (
   `stock` int UNSIGNED NOT NULL,
   `released_at` datetime DEFAULT NULL,
   `brand_id` int UNSIGNED DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `product_category` (
   `product_id` int UNSIGNED NOT NULL,
   `category_id` int UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 ALTER TABLE `brand`
   ADD PRIMARY KEY (`id`);
