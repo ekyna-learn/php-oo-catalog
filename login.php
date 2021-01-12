@@ -20,11 +20,11 @@
     <input type="email" name="email" id="inputEmail" class="form-control" placeholder="Adresse email" required autofocus>
     <label for="inputPassword" class="sr-only">Mot de passe</label>
     <input type="password" id="inputPassword" name="password" class="form-control" placeholder="Mot de passe" required>
-    <div class="checkbox mb-3">
+    <!--<div class="checkbox mb-3">
         <label>
             <input type="checkbox" value="remember-me"> Se souvenir de moi
         </label>
-    </div>
+    </div>-->
     <button class="btn btn-lg btn-primary btn-block" type="submit">Connexion</button>
     <!--<p class="mt-5 mb-3 text-muted">&copy; 2017-2019</p>-->
 </form>

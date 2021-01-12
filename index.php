@@ -1,3 +1,6 @@
+
+<?php echo md5('admin'); exit; ?>
+
 <!-- Require bootstrap -->
 <?php require 'bootstrap.php'; ?>
 <!doctype html>

@@ -25,6 +25,12 @@
                     Catégories
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/user">
+                    <span data-feather="user"></span>
+                    Utilisateurs
+                </a>
+            </li>
         </ul>
     </div>
 </nav>
