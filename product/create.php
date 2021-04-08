@@ -37,6 +37,14 @@
                         </select>
                     </div>
                 </div>-->
+                <!-- TODO <div class="form-group row">
+                    <label for="category" class="col-sm-2 col-form-label">Marque</label>
+                    <div class="col-sm-10">
+                        <select class="form-control" id="category" name="category">
+                            <option value="{category.id}">{category.title}</option>
+                        </select>
+                    </div>
+                </div>-->
                 <div class="form-group row">
                     <label for="description" class="col-sm-2 col-form-label">Description</label>
                     <div class="col-sm-10">
@@ -59,6 +67,12 @@
                     <label for="released_at" class="col-sm-2 col-form-label">Mise en ligne</label>
                     <div class="col-sm-10">
                         <input type="date" class="form-control" id="released_at" name="released_at">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="image" class="col-sm-2 col-form-label">Image</label>
+                    <div class="col-sm-10">
+                        <input type="file" class="form-control" id="image" name="image">
                     </div>
                 </div>
                 <div class="form-group row">
